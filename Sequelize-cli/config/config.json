@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "root",
+    "password": "10170551",
+    "database": "woftsun-cli",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "seederStorage": "sequelize"
+  },
+  "test": {
+    "username": "root",
+    "password": "10170551",
+    "database": "woftsun_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "seederStorage": "sequelize"
+  },
+  "production": {
+    "username": "root",
+    "password": "10170551",
+    "database": "woftsun_production",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "seederStorage": "sequelize"
+  }
+}

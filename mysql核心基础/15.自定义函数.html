@@ -1,0 +1,154 @@
+<!--
+1.什么是自定义函数
+自定义函数和存储过程很像，只不过自定义函数不需要手动通过call调用
+而是和其他的聚合函数一样会在sql语句中自动被调用
+例如：select avg(score) from student;
+例如：select count(*) from student where age >= 18;
+
+2.创建自定义函数
+create function 函数名(形参列表) returns 数据类型 函数特征
+begin
+    sql语句;
+    .....
+    return 值;
+end;
+
+函数特征
+1 DETERMINISTIC 不确定的
+2 NO SQL 没有sql语句，当然也不会修改数据
+3 READS SQL DATA 只读数据，不会修改数据
+4 MODIFIES SQL DATA 要修改数据
+5 CONTAINS SQL 包含了sql语句
+
+3.调用函数
+select 函数名称(参数) from dual;
+
+示例：
+create function fun_add(a int,b int) returns int DETERMINISTIC
+begin
+    declare sum int default 0;
+    set sum = a + b;
+    return sum;
+end;
+
+示例：
+create function check_city(cityId int) returns varchar(20) DETERMINISTIC
+begin
+    declare name varchar(20) default '';
+    select city into name from city where id = cityId;
+    return name;
+end;
+-->
+
+<!--
+1.查看函数
+1.1 查看所有函数
+show function status
+1.2 查看指定数据库中的函数
+show function status where db ='数据库名';
+1.3 查看函数源代码
+show create 函数名
+
+2.删除存储过程
+drop function 函数名称
+-->
+
+<!--
+1.IF语句
+if 条件表达式 then
+...  ...
+elseif 条件表达式 then
+...  ...
+else
+...  ...
+end if;
+
+示例一：
+create function fun_test(age int) returns varchar(30) DETERMINISTIC
+begin
+    declare result varchar(30) default '';
+    if age >= 18 then
+    set result = '成年人';
+    else
+    set result = '未成年人';
+    end if
+    return result
+end;
+
+示例二：
+create function fun2(score int) returns varchar(30) DETERMINISTIC
+begin
+    declare result varchar(30) default '';
+    if score < 0 || score > 100 then
+    set result = '非法成绩';
+    elseif score < 60 then
+    set result = '未及格';
+    elseif score < 80 then
+    set result = '良好';
+    else
+    set result = '优秀';
+    end if;
+    return result;
+end;
+-->
+
+<!--
+1.case语句
+case
+when 条件表达式 then
+... ...
+when 条件表达式 then
+... ...
+end case;
+
+示例：
+create fun3(score int) returns varchar(30) DETERMINISTIC
+begin
+    declare result varchar(30) default '';
+    case
+    when score = 100 then
+    set result = '还需努力';
+    when score = 0 then
+    set result = '没救了';
+    end case;
+    return result;
+end;
+-->
+
+<!--
+1.循环语句
+while 条件表达式 do
+    ... ...
+end while;
+
+示例：1 +到 n 的和
+create function fun(num int) returns int DETERMINISTIC
+begin
+    declare sum int default 0;
+    declare sumIndex int default 0;
+
+    while sumIndex < num do
+    set sum = sum + sumIndex;
+    set sumIndex += 1;
+    end while;
+    return sum;
+end;
+
+--------------------------------------------------------------
+repeat
+...  ...
+until 条件表达式 end repeat;
+
+示例：
+create function fun(num int) returns int DETERMINISTIC
+begin
+    declare sum int default 0;
+    declare sumIndex int default 1;
+
+    repeat
+        set sum = sum + sumIndex;
+        set sumIndex = sumIndex + 1;
+    until sumIndex > num end repeat;
+    return sum;
+end;
+-->

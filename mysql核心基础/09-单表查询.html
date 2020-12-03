@@ -1,0 +1,169 @@
+<!--
+1.单表查询
+select * from 表名; // 查询表中所有数据
+select 字段1，字段2 from 表名; // 查询表中指定字段数据
+select [* || 字段] from 表名 [where 条件] // 查询表中满足条件的数据
+
+2.什么是结果集？
+通过查询语句查询出来的结果我们称之为结果集
+结果集以表的形式将查询的结果返回给我们
+
+注意点：
+结果集返回的表和查询的表不是同一张表
+被查询的表是真是存在的，是存在磁盘上的
+而结果集不是真是存在的，是存储在内存中的
+
+3.如何给结果集的字段别名？
+- 查询指定字段数据时，我们可以通过as给指定字段取别名
+select name as stuName,id as stuId from student;
+
+4.什么是字段表达式？
+- 查询数据的时候，除了可以查询指定字段的数据意外，我们还可以查询表达式的结果
+select 6 + 6；
+
+5.什么是伪表？
+- 字段表达式虽然能够查询出表达式的结果，但是不符合MySQL的规范
+- 所以我们可以通过伪表（dual）的方式让字段表达式符合MySQL的规范
+select 6+6 from dual;
+-->
+
+<!--
+1.模糊查询
+格式：
+select 字段 from 表名 where 字段 like '条件';
+
+_通配符：表示任意一个字符
+%通配符：表示0-n个字符
+
+a_c: 意思是a开头c结尾的三位数；
+
+_a_c: 表示任意字符开头，第二位是a并且以c结尾的四位数；
+
+a%c: 表示a开头c结尾的任意字符串
+%a%c: 表示包含a并且以c结尾的任意字符串
+
+select * from student where name like 'z_';
+select * from student where name like '%s%';
+-->
+
+<!--
+1.排序 order by
+select 字段 from 表名 order by 字段 [asc | desc];
+select * from teacher order by id asc;  // 升序排序  默认情况下不写也是按照升序排列的
+select * from teacher order by id desc;  // 降序排序
+
+select * from rel order by teacherId,studentId; // 如果teacherId相同，那么可以继续按照其他字段来排序
+-->
+
+<!--
+1.聚合函数
+count(); 统计
+select count(*) from student;
+select count(*) from student where name='qsc';
+
+sun();求和
+select sum(id) from student;
+
+avg(); 求平均值
+select avg(id) from student;
+
+max(); 获取最大值
+select max(id) from student;
+
+min(); 获取最小值
+select min(id) from student;
+
+2.数值类
+rand(); 生成随机数
+select rand() from dual;
+select * from student order by rand();   // 随机排序
+
+round(); 四舍五入
+select round(3.1) from dual;
+select round(4.9) from dual;
+
+ceil(); 向上取整
+select ceil(3.1) from dual;
+
+floor(); 向下取整
+select floor(3.9) from dual;
+
+truncate(); 截取小数位数
+select truncate(3.123456,2);
+
+3.字符串类
+ucase(); 转换为大写
+select ucase('abc') from dual;
+
+lcase(); 转换为小写
+select lcase('QSC') from dual;
+
+left(); 从左边开始截取到指定位置
+select left('123456789',4) from dual;  // 1234
+
+right(); 从右边开始截取到指定位置
+select right('123456789',3) from dual;  // 6789
+
+substring(); 从指定位置开始截取指定个字符
+select substring('1234567890',3,5) from dual;
+-->
+
+<!--
+1.数据分组 group by
+select 分组名称 || 聚合函数 from 表名 group by 分组字段；
+- 需求：要求统计表中一共有多少个城市
+select city from city;
+select city from city group by city;
+
+- 需求：要求统计每个城市中有多少个人
+select city,count(city) from city group by city;
+
+注意点：
+- 在对数据进行分组的时候，select后面必须是分组字段或者是聚合函数，否则就只会返回第一条数据
+select city from city group by city;
+
+select city,group_concat from city group by city;
+-->
+
+<!--
+1.条件查询 having
+- having和where很像都是用来做条件查询的
+- 但是where是去数据库查询符合条件的数据，而having是去结果集中查询符合条件的数据
+
+select * from city where city='北京';
+select * from city having city='北京';
+
+select name,age from city where city='上海';
+select name,age from city having city='上海';
+// 1054 - Unknown column 'city' in 'having clause', Time: 0.003000s
+-->
+
+<!--
+1.分页 limit
+select 字段 from 表 limit 索引，个数;
+select * from city limit 0,2;
+select * from city limit 2,2;
+-->
+
+<!--
+1.查询选项
+select [查询选项] 字段名称 from 表名;
+all   显示偶有查询出来的数据[默认]；
+distinct  去除结果集中重复的数据后再显示
+
+select city from city;
+select all city from city;
+select distinct city from city;
+
+注意点：
+如果是通过distinct来对结果集中重复的数据进行去重
+那么只有所有列的数据都相同才去重
+
+select all name from city;
+select distinct name from city;
+-->
+
+<!--
+完整的查询语句
+select [查询选项] 字段名称 from [where 条件] [order by 排序] [group by 分组] [having 条件] [limit 分页];
+-->

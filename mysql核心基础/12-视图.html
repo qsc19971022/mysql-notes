@@ -1,0 +1,102 @@
+<!--
+1.视图基本概念
+- 视图本质就是将结果集缓存起来
+- 由于结果集是一张虚拟表，所以视图也是一张虚拟表
+- 由于结果集是建立在标的基础上的，所以视图也是建立在表的基础上的
+
+2.视图的作用
+- 视图可以用来简化sql语句
+- 视图可以用来隐藏表的结构
+- 视图可以用来提升数据安全性
+
+3.创建视图语法
+create view 视图名称 as select 语句；
+-->
+
+<!--
+1.视图数据操作
+-- select name,city from city;
+-- create view city_view as select name,city from city;
+-- select * from city_view;
+-- insert into city_view values ('qj','兰州');
+-- update city_view set city = '安阳' where city = '兰州';
+-- delete from city_view where city = '安阳';
+
+注意点：
+由于视图保存的是结果集，由于结果集是基于原始表的
+所以操作视图中的数据，本质上操作的是原始数据表中的数据
+
+2.修改视图内容
+alter view 视图名称 as select 语句;
+alter view city_view as select * from city;
+
+3.删除视图
+drop view if exists 视图名;
+-->
+
+<!--
+1.视图完整语句
+create [algorithm = {merge | temptable | undefined}] view 视图名称 as select 语句 [with check option]
+
+2.视图算法
+merge：合并式(替代式)算法
+- 将视图的语句和外层得到语句合并之后再执行
+- 改算法运行更新数据
+-- select name,city from city;
+-- create algorithm=merge view city_view1 as select * from city;
+-- select * from city_view;
+-- select city from (select name,city from city);
+
+temptable:临时表算法
+- 将视图生成一个临时表，再执行外层的语句
+- 该算法不允许更新数据
+
+-- create algorithm = temptable view city_view2 as select * from city;
+-- select * from city_view2;
+-- (select * from city) as t;
+-- select * from t;
+
+undefined:未定义算法
+由MySQL自己决定使用如上的哪一种算法，默认就是undefined
+一般情况下会自动选择merge算法
+create view city_view3 as select * from city;
+
+3.视图限制(with check option)
+在with check option的选项下
+1.要保证数据update之后也要符合where的条件
+2.要保证insert之后的数据能被视图查询出来
+3.对于delete，有无 with check option都一样
+4.对于没有where字句的视图，使用with check option是多余的
+
+- 默认情况下哪怕插入的数据和更新的数据不符合创建视图的条件，我们也可以通过视图来插入和更新的
+-- create view city_view as select * from city where age > 30;
+-- insert into city_view values (7,'qj',22,'兰州');
+-- update city_view set age = 23 where age = 32;
+
+- 如果想让插入和更新的数据必须符合创建视图的条件，那么久可以在创建的时候添加限制条件
+-- create view city_view2 as select * from city where age > 30 with check option;
+-- insert into city_view2 values (10,'zz',22,'天津'); // 报错，因为不符合条件
+-- 加了限制条件使用update如果不满足条件也会报错
+-->
+
+<!--
+1.视图更新限制
+1.1 如果视图的算法是merge，那么可以更新视图
+1.2 如果没有指定with check option，那么无论数据符不符合创建视图条件都可以更新
+1.3 如果指定了with check option ，那么只有符合创建视图的条件才可以更新
+1.4 除此之外由于视图是一张虚拟表，视图是基于原始表的，更新视图的本质就是更新原始表
+    所以只有原始表中存在原始数据才可以改，通过其他方式生成的数据都不可以更新
+
+-- select city,avg(age) as avgScore from city group by city;
+-- create view city_view3 as select city,avg(age) as avgScore from city;
+-- update city_view3 set avgAge = 30 where avgAge = 47.5; // 报错
+
+2.更新限制
+聚合函数
+distinct 关键字
+group by
+having
+union
+from字表包含多张表
+select语句中应用了不可更新的新视图
+-->

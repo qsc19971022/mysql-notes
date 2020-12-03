@@ -1,0 +1,65 @@
+<!--
+1.创建数据库
+create database [if not exists] 数据库名 [charset=字符集];
+
+示例一：
+create database person;
+注意点：以上语句，如果mysql中已经有了名称叫person,再执行就会报错；
+
+示例二：
+create database if not exists person;
+注意点：以上语句，如果mysql中已经有了名称叫person，再执行不会报错；
+
+实例三：
+create database if not exists person charset=utf8;
+注意点：为了避免将来读取的字符集和存储的字符集不一样导致乱码问题；
+在创建数据库的时候，我们还需要指定当前创建的数据库将来使用什么编码方式存储数据；
+
+
+2.如何查看数据库全局默认的编码
+show variables likes 'character_set_%';
+
+3.如何查看某个数据库的编码
+show creat database person;
+
+4.特殊的数据库名称处理
+create database if not exists `create` charset=utf8;
+注意点：如果数据库的名称是sql的关键字或者是一些特殊的符号，这个时候就需要用反引号括起来；
+-->
+<!--
+1.如何删除数据库
+drop database [if exists] 数据库名称;
+
+示例一：
+drop database person;
+注意点：以上语句，如果mysql中没有要删除的数据库，那么就会报错；
+
+示例二：
+drop database if exists person；
+注意点：以上语句，如果mysql中没有要删除的数据库，那么就会跳过，不会报错；
+
+-->
+<!--
+1.如何修改数据库
+alter database 数据库名 [charset=字符集];
+alter database person charset=utf8;
+
+2.如何查看数据库
+show create database 数据库名;
+show database;
+
+-->
+<!--
+新建-- C/增加
+create database [if not exists] 数据库名;
+
+删除-- D/删除
+drop database [if exists] 数据库名;
+
+修改-- U/修改
+alter database 数据库名 charset=字符编码；
+
+查看-- R/查看
+show create database 数据库名；
+show databases;
+-->

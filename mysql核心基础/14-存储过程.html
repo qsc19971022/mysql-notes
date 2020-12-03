@@ -1,0 +1,106 @@
+<!--
+1.什么是存储过程？
+存储过程和其他编程语言的函数很像，可以用于封装一组特定功能的sql语句
+用户通过'call 存储过程的名称()'来调用执行它
+
+2.存储过程基本语法
+2.1定义
+create procedure 存储过程名称(形参列表)
+begin
+    // sql语句
+    // ...
+end;
+
+示例：
+create procedure show_stu()
+begin
+    select * from student;
+end;
+
+create procedure show_stu2(stuId int)
+begin
+    select * from student where id=stuId;
+end;
+
+2.2调用
+call 存储过程名称(参数);
+
+3.查看存储过程
+3.1 查看MySQL中所有的存储过程
+show procedure status;
+3.2 查看指定数据库中的存储过程
+show procedure status where db= 'db_name';
+3.3 查看指定存储过程的源代码
+show create procedure show_stu;
+
+4.删除存储过程
+drop procedure show_stu
+-->
+
+<!--
+1.如何在MySQL中定义变量
+- 全局变量
+定义：@变量名称
+赋值：set @全局变量名称 = 值；
+    select 字段名称 into 全局变量名称 from 表名；
+- 局部变量
+定义：declare 变量名称 数据类型；
+赋值：set 局部变量名称 = 值；
+    select 字段名称 into 局部变量名称 from 表名；
+
+2.全局变量
+set @stuId = 2;
+set @stuName = '';
+select name into @stuName from student where id=@stuId;
+select @stuName from dual;
+
+3.局部变量
+局部变量只能在存储过程和函数中定义，所以也称值为存储过程变量
+create procedure show_stu()
+begin
+    declare stuId int default 1;
+    declare stuName varchar(20);
+    select name into stuName from student where id = stuId;
+    select stuName from dual;
+end;
+-->
+
+<!--
+1.存储过程参数：
+- MySQL存储过程中的参数分为：
+    + in    输入参数[默认]
+    + out   输出参数
+    + inout 输入输出参数
+
+示例一：输入参数
+外界传递给我们的参数
+create procedure show_stu1(in stu int)
+begin
+    set stuName = '';
+    select name into stuName from student where id = stu;
+end;
+
+示例二：输出参数
+存储过程中返回给外界的参数
+MySQL存储过程中不能使用return返回值，需要通过参数来向外返回值
+create procedure show_stu2(in stuId int,out stuName varchar(20))
+begin
+    select name into stuName from student where id = stuId;
+end;
+
+set @stuId = 1;`
+set @stuName = '';
+call show_stu(@stuId,@stuName);
+select @stuName from dual;
+
+示例三：
+同时具备了输入参数和输出参数所有功能
+create procedure show_city(inout data int)
+begin
+    select age into data from city where id = data;
+end;
+
+set @data = 5;
+call show_city(@data);
+select @data from dual;
+-->
